@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
-import LogInPage from "./pages/LogInPage";
+import LogInPage from "./logInpage/LogInPage";
 import App from "./App";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
