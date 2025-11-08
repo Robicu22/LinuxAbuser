@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import API_URL from "../../config/api";
 import Task from "./components/Task";
 import Sidebar from "../Dashboard/components/Sidebar";
 import EditTaskModal from "./components/EditTaskModal";
@@ -35,7 +36,7 @@ export default function TaskPageDisplay() {
       }
 
       const user = JSON.parse(storedUser);
-      const response = await axios.get(`http://localhost:5000/api/tasks?userId=${user.id}`);
+      const response = await axios.get(`${API_URL}/tasks?userId=${user.id}`);
       
       console.log("Tasks fetched:", response.data);
       const tasksData = response.data.tasks || response.data;
@@ -58,7 +59,7 @@ export default function TaskPageDisplay() {
       }
 
       const user = JSON.parse(storedUser);
-      const response = await axios.patch(`http://localhost:5000/api/tasks/${id}/toggle`, {
+      const response = await axios.patch(`${API_URL}/tasks/${id}/toggle`, {
         userId: user.id
       });
       console.log("Task toggled:", response.data);
@@ -85,7 +86,7 @@ export default function TaskPageDisplay() {
 
       const user = JSON.parse(storedUser);
       
-      await axios.delete(`http://localhost:5000/api/tasks/${id}`, {
+      await axios.delete(`${API_URL}/tasks/${id}`, {
         data: { userId: user.id }
       });
       console.log("Task deleted:", id);
@@ -108,7 +109,7 @@ export default function TaskPageDisplay() {
 
       const user = JSON.parse(storedUser);
 
-      await axios.patch(`http://localhost:5000/api/tasks/${taskId}/accept`, {
+      await axios.patch(`${API_URL}/tasks/${taskId}/accept`, {
         userId: user.id,
       });
 
@@ -136,7 +137,7 @@ export default function TaskPageDisplay() {
       }
 
       const response = await axios.put(
-        `http://localhost:5000/api/tasks/${editingTask._id}`,
+        `${API_URL}/tasks/${editingTask._id}`,
         {
           ...taskData,
           userId: user.id

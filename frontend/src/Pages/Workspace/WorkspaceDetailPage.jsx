@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
+import API_URL from "../../config/api";
 import TasksList from "./DetailComponents/TasksList";
 import MembersList from "./DetailComponents/MembersList";
 import Sidebar from "../Dashboard/components/Sidebar";
@@ -38,7 +39,7 @@ export default function WorkspaceDetailPage() {
 
   async function fetchWorkspaceDetails() {
     try {
-      const response = await axios.get(`http://localhost:5000/api/workspaces/${id}`);
+      const response = await axios.get(`${API_URL}/workspaces/${id}`);
       setWorkspace(response.data);
     } catch (error) {
       console.error("Error fetching workspace:", error);
@@ -56,7 +57,7 @@ export default function WorkspaceDetailPage() {
 
       // Fetch ALL tasks in this workspace
       const workspaceTasksResponse = await axios.get(
-        `http://localhost:5000/api/tasks/workspace/${id}?userId=${userData.id}`
+        `${API_URL}/tasks/workspace/${id}?userId=${userData.id}`
       );
       const allTasksData = workspaceTasksResponse.data.tasks || workspaceTasksResponse.data;
       
@@ -78,7 +79,7 @@ export default function WorkspaceDetailPage() {
 
       const userData = JSON.parse(storedUser);
 
-      await axios.patch(`http://localhost:5000/api/tasks/${taskId}/accept`, {
+      await axios.patch(`${API_URL}/tasks/${taskId}/accept`, {
         userId: userData.id,
       });
 
@@ -98,7 +99,7 @@ export default function WorkspaceDetailPage() {
 
     try {
       // First, find user by email
-      const userResponse = await axios.get(`http://localhost:5000/api/users?email=${newMemberEmail}`);
+      const userResponse = await axios.get(`${API_URL}/users?email=${newMemberEmail}`);
       
       if (!userResponse.data) {
         alert("User not found with that email");
@@ -108,7 +109,7 @@ export default function WorkspaceDetailPage() {
       const newMember = userResponse.data;
 
       // Add member to workspace
-      await axios.post(`http://localhost:5000/api/workspaces/${id}/members`, {
+      await axios.post(`${API_URL}/workspaces/${id}/members`, {
         userId: newMember._id,
         createdBy: user.id, // Admin user ID for auth
       });
@@ -127,7 +128,7 @@ export default function WorkspaceDetailPage() {
     if (!confirm("Are you sure you want to remove this member?")) return;
 
     try {
-      await axios.delete(`http://localhost:5000/api/workspaces/${id}/members`, {
+      await axios.delete(`${API_URL}/workspaces/${id}/members`, {
         data: { userId: memberId, createdBy: user.id },
       });
 
@@ -148,7 +149,7 @@ export default function WorkspaceDetailPage() {
       }
 
       const userData = JSON.parse(storedUser);
-      const response = await axios.patch(`http://localhost:5000/api/tasks/${taskId}/toggle`, {
+      const response = await axios.patch(`${API_URL}/tasks/${taskId}/toggle`, {
         userId: userData.id
       });
       
@@ -174,7 +175,7 @@ export default function WorkspaceDetailPage() {
 
       const userData = JSON.parse(storedUser);
       
-      await axios.delete(`http://localhost:5000/api/tasks/${taskId}`, {
+      await axios.delete(`${API_URL}/tasks/${taskId}`, {
         data: { userId: userData.id }
       });
       

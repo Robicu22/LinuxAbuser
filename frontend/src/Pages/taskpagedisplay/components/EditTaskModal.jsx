@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import API_URL from "../../../config/api";
 import styles from "./taskModal.module.css";
 
 export default function EditTaskModal({ task, onSubmit, onClose }) {
@@ -41,7 +42,7 @@ export default function EditTaskModal({ task, onSubmit, onClose }) {
       }
 
       const user = JSON.parse(storedUser);
-      const response = await axios.get(`http://localhost:5000/api/workspaces?userId=${user.id}`);
+      const response = await axios.get(`${API_URL}/workspaces?userId=${user.id}`);
       console.log("Workspaces fetched:", response.data);
       setWorkspaces(Array.isArray(response.data) ? response.data : []);
     } catch (error) {
@@ -57,7 +58,7 @@ export default function EditTaskModal({ task, onSubmit, onClose }) {
       const selectedWorkspace = workspaces.find(ws => ws.name === workspace);
       if (!selectedWorkspace) return;
 
-      const response = await axios.get(`http://localhost:5000/api/workspaces/${selectedWorkspace._id}`);
+      const response = await axios.get(`${API_URL}/workspaces/${selectedWorkspace._id}`);
       console.log("Workspace details:", response.data);
       
       if (response.data && response.data.members) {

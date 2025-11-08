@@ -1,5 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
+import API_URL from "../../../config/api";
 import styles from "./taskForm.module.css";
 import TaskModal from "./TaskModal";
 
@@ -41,7 +42,7 @@ export default function TaskForm({ tasks, setTasks, onTaskCreated }) {
         assignedTo: taskDetails.assignedTo || null,
       };
 
-      const response = await axios.post('http://localhost:5000/api/tasks', newTask);
+      const response = await axios.post(`${API_URL}/tasks`, newTask);
       console.log("Task created:", response.data);
 
       // Refresh tasks list

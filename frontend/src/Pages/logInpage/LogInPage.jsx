@@ -2,6 +2,7 @@ import LogInForm from "./components/LogInForm";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import API_URL from "../../config/api";
 import formStyles from "./components/form.module.css";
 import styles from "./loginPage.module.css";
 
@@ -17,7 +18,7 @@ export default function LogInPage() {
       
       console.log("Attempting login with:", { email });
       
-      const response = await axios.post('http://localhost:5000/api/login', {
+      const response = await axios.post(`${API_URL}/login`, {
         email: email,
         password: pass
       });

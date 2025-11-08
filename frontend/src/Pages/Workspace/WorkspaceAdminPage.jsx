@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import API_URL from "../../config/api";
 import WorkspaceCard from "./components/WorkspaceCard";
 import Sidebar from "../Dashboard/components/Sidebar";
 import styles from "./WorkspaceAdminPage.module.css";
@@ -30,7 +31,7 @@ export default function WorkspaceAdminPage() {
       }
 
       const user = JSON.parse(storedUser);
-      const response = await axios.get(`http://localhost:5000/api/workspaces?userId=${user.id}`);
+      const response = await axios.get(`${API_URL}/workspaces?userId=${user.id}`);
       console.log("Workspaces fetched:", response.data);
       setWorkspaces(Array.isArray(response.data) ? response.data : []);
     } catch (error) {
@@ -58,7 +59,7 @@ export default function WorkspaceAdminPage() {
           createdBy: user.id,
         };
 
-        const response = await axios.post('http://localhost:5000/api/workspaces', workspaceData);
+        const response = await axios.post(`${API_URL}/workspaces`, workspaceData);
         setWorkspaces([...workspaces, response.data]);
         setNewWorkspace({ name: "", color: "#3b82f6", description: "" });
         setShowCreateForm(false);
@@ -71,7 +72,7 @@ export default function WorkspaceAdminPage() {
 
   const handleDeleteWorkspace = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/api/workspaces/${id}`);
+      await axios.delete(`${API_URL}/workspaces/${id}`);
       setWorkspaces(workspaces.filter((workspace) => workspace._id !== id));
     } catch (error) {
       console.error("Error deleting workspace:", error);

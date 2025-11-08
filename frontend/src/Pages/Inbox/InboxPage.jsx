@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import API_URL from "../../config/api";
 import Sidebar from "../Dashboard/components/Sidebar";
 import styles from "./InboxPage.module.css";
 
@@ -32,7 +33,7 @@ export default function InboxPage() {
       }
 
       const user = JSON.parse(storedUser);
-      const response = await axios.get(`http://localhost:5000/api/notifications?userId=${user.id}`);
+      const response = await axios.get(`${API_URL}/notifications?userId=${user.id}`);
       
       console.log("Notifications fetched:", response.data);
       const notificationsData = response.data.notifications || response.data;
@@ -55,7 +56,7 @@ export default function InboxPage() {
       }
 
       const user = JSON.parse(storedUser);
-      await axios.patch(`http://localhost:5000/api/notifications/${notificationId}/read`, {
+      await axios.patch(`${API_URL}/notifications/${notificationId}/read`, {
         userId: user.id
       });
 
@@ -80,7 +81,7 @@ export default function InboxPage() {
       }
 
       const user = JSON.parse(storedUser);
-      await axios.patch(`http://localhost:5000/api/notifications/mark-all-read`, {
+      await axios.patch(`${API_URL}/notifications/mark-all-read`, {
         userId: user.id
       });
 

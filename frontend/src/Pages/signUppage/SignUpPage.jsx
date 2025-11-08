@@ -2,6 +2,7 @@ import SignUpForm from "./components/SignUpForm";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import API_URL from "../../config/api";
 import styles from "./signUpPage.module.css";
 
 export default function SignUpPage() {
@@ -20,7 +21,7 @@ export default function SignUpPage() {
       
       console.log("Attempting signup with:", { name: data.username, email: data.email });
       
-      const response = await axios.post('http://localhost:5000/api/signup', {
+      const response = await axios.post(`${API_URL}/signup`, {
         name: data.username,
         email: data.email,
         password: data.password

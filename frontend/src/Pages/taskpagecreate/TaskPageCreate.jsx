@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import API_URL from "../../config/api";
 import TaskForm from "./components/TaskForm";
 import Task from "./components/Task";
 import Sidebar from "../Dashboard/components/Sidebar";
@@ -26,7 +27,7 @@ export default function TaskPage() {
       }
 
       const user = JSON.parse(storedUser);
-      const response = await axios.get(`http://localhost:5000/api/tasks?userId=${user.id}`);
+      const response = await axios.get(`${API_URL}/tasks?userId=${user.id}`);
       
       console.log("Tasks fetched:", response.data);
       const tasksData = response.data.tasks || response.data;
@@ -42,7 +43,7 @@ export default function TaskPage() {
 
   async function handleToggleTask(id) {
     try {
-      const response = await axios.patch(`http://localhost:5000/api/tasks/${id}/toggle`);
+      const response = await axios.patch(`${API_URL}/tasks/${id}/toggle`);
       console.log("Task toggled:", response.data);
       
       // Update local state
@@ -59,7 +60,7 @@ export default function TaskPage() {
 
   async function handleDeleteTask(id) {
     try {
-      await axios.delete(`http://localhost:5000/api/tasks/${id}`);
+      await axios.delete(`${API_URL}/tasks/${id}`);
       console.log("Task deleted:", id);
       
       // Update local state

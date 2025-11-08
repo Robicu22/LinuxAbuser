@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import API_URL from "../../../config/api";
 import styles from "./Sidebar.module.css";
 
 export default function Sidebar({ isOpen, onClose }) {
@@ -44,7 +45,7 @@ export default function Sidebar({ isOpen, onClose }) {
   // Fetch unread notification count
   const fetchUnreadCount = async (userId) => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/notifications/unread-count?userId=${userId}`);
+      const response = await axios.get(`${API_URL}/notifications/unread-count?userId=${userId}`);
       setUnreadCount(response.data.count || 0);
     } catch (error) {
       console.error("Error fetching unread count:", error);
@@ -56,7 +57,7 @@ export default function Sidebar({ isOpen, onClose }) {
   const fetchWorkspaces = async (userId) => {
     try {
       setLoadingWorkspaces(true);
-      const response = await axios.get(`http://localhost:5000/api/workspaces?userId=${userId}`);
+      const response = await axios.get(`${API_URL}/workspaces?userId=${userId}`);
       const workspacesData = Array.isArray(response.data) ? response.data : [];
       // Limit to 5 most recent workspaces for the sidebar
       setWorkspaces(workspacesData.slice(0, 5));

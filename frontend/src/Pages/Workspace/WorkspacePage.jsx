@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import API_URL from "../../config/api";
 import WorkspaceCard from "./components/WorkspaceCard";
 import Sidebar from "../Dashboard/components/Sidebar";
 import styles from "./WorkspacePage.module.css";
@@ -31,7 +32,7 @@ export default function WorkspacePage() {
       }
 
       const user = JSON.parse(storedUser);
-      const response = await axios.get(`http://localhost:5000/api/workspaces?userId=${user.id}`);
+      const response = await axios.get(`${API_URL}/workspaces?userId=${user.id}`);
       console.log("Workspaces fetched:", response.data);
       setWorkspaces(Array.isArray(response.data) ? response.data : []);
     } catch (error) {

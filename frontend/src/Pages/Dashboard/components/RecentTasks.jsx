@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import API_URL from "../../../config/api";
 import TaskCard from "./TaskCard";
 import styles from "./RecentTasks.module.css";
 
@@ -26,7 +27,7 @@ export default function RecentTasks() {
       }
 
       const user = JSON.parse(storedUser);
-      const response = await axios.get(`http://localhost:5000/api/tasks/recent?userId=${user.id}`);
+      const response = await axios.get(`${API_URL}/tasks/recent?userId=${user.id}`);
       
       console.log("Recent tasks fetched:", response.data);
       const tasksData = response.data.tasks || response.data;
