@@ -1,4 +1,5 @@
 import Workspace from "../model/workspaceModel.js";
+import User from "../model/userModel.js";
 
 // Create a new workspace
 export const createWorkspace = async (req, res) => {
@@ -13,7 +14,7 @@ export const createWorkspace = async (req, res) => {
       name,
       color: color || "#3b82f6",
       createdBy,
-      members: [createdBy], // Creator is automatically a member
+      members: [], // Admin is not added as a member
     });
 
     await newWorkspace.save();
@@ -33,9 +34,19 @@ export const getWorkspaces = async (req, res) => {
       return res.status(400).json({ message: "userId is required" });
     }
 
-    const workspaces = await Workspace.find({
-      $or: [{ createdBy: userId }, { members: userId }],
-    }).populate("createdBy", "name email");
+    // Check if user is admin
+    const user = await User.findById(userId);
+    
+    let workspaces;
+    if (user && user.role === "admin") {
+      // Admin sees all workspaces
+      workspaces = await Workspace.find({}).populate("createdBy", "name email");
+    } else {
+      // Regular users only see workspaces they're members of
+      workspaces = await Workspace.find({
+        members: userId,
+      }).populate("createdBy", "name email");
+    }
 
     res.status(200).json(workspaces);
   } catch (error) {

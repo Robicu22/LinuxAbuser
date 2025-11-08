@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import MemberItem from "./MemberItem";
 import styles from "./MembersList.module.css";
 
-export default function MembersList({ members, workspaceColor, onRemoveMember, creatorId }) {
+export default function MembersList({ members, workspaceColor, workspaceTasks = [], onRemoveMember, creatorId }) {
   const [searchTerm, setSearchTerm] = useState("");
   const [sortBy, setSortBy] = useState("name");
   const [filterRole, setFilterRole] = useState("All");
@@ -17,6 +17,13 @@ export default function MembersList({ members, workspaceColor, onRemoveMember, c
       .slice(0, 2);
   };
 
+  // Calculate task count for a member
+  const getTaskCount = (memberId) => {
+    return workspaceTasks.filter(task => 
+      task.assignedTo && (task.assignedTo._id === memberId || task.assignedTo === memberId)
+    ).length;
+  };
+
   // Convert members array to proper format if needed
   const formattedMembers = Array.isArray(members) ? members.map(member => {
     if (typeof member === 'string') {
@@ -29,7 +36,7 @@ export default function MembersList({ members, workspaceColor, onRemoveMember, c
       initials: getInitials(member.name || 'Unknown'),
       role: member._id === creatorId ? 'Creator' : 'Member',
       email: member.email || '',
-      tasksCount: 0, // Could be calculated from tasks
+      tasksCount: getTaskCount(member._id),
     };
   }).filter(Boolean) : [];
 

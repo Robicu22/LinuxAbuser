@@ -1,17 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import styles from "./Sidebar.module.css";
-
-const recentWorkspaces = [
-  { id: 1, name: "Workspace Example 1", color: "#3b82f6", tasks: 12 },
-  { id: 2, name: "Workspace Example 2", color: "#10b981", tasks: 8 },
-  { id: 3, name: "Workspace Example 3", color: "#f59e0b", tasks: 5 },
-  { id: 4, name: "Workspace Example 4", color: "#ef4444", tasks: 3 },
-  { id: 5, name: "Workspace Example 5", color: "#8b5cf6", tasks: 6 },
-];
 
 export default function Sidebar({ isOpen, onClose }) {
   const [user, setUser] = useState(null);
+  const [workspaces, setWorkspaces] = useState([]);
+  const [loadingWorkspaces, setLoadingWorkspaces] = useState(false);
   const navigate = useNavigate();
 
   // Get current path from window.location
@@ -22,12 +17,31 @@ export default function Sidebar({ isOpen, onClose }) {
     const storedUser = localStorage.getItem('user');
     if (storedUser) {
       try {
-        setUser(JSON.parse(storedUser));
+        const userData = JSON.parse(storedUser);
+        setUser(userData);
+        // Fetch workspaces when user is loaded
+        fetchWorkspaces(userData.id);
       } catch (error) {
         console.error("Error parsing user data:", error);
       }
     }
   }, []);
+
+  // Fetch user's workspaces
+  const fetchWorkspaces = async (userId) => {
+    try {
+      setLoadingWorkspaces(true);
+      const response = await axios.get(`http://localhost:5000/api/workspaces?userId=${userId}`);
+      const workspacesData = Array.isArray(response.data) ? response.data : [];
+      // Limit to 5 most recent workspaces for the sidebar
+      setWorkspaces(workspacesData.slice(0, 5));
+    } catch (error) {
+      console.error("Error fetching workspaces:", error);
+      setWorkspaces([]);
+    } finally {
+      setLoadingWorkspaces(false);
+    }
+  };
 
   // Get user initials for avatar
   const getInitials = (name) => {
@@ -72,21 +86,21 @@ export default function Sidebar({ isOpen, onClose }) {
             href="/dashboard"
             className={`${styles.navLink} ${isActive("/dashboard")}`}
           >
-            <span className={styles.navIcon}>🏠</span>
+            {/* <span className={styles.navIcon}>🏠</span> */}
             Home
           </a>
           <a
             href="/workspaces"
             className={`${styles.navLink} ${isActive("/workspaces")}`}
           >
-            <span className={styles.navIcon}>📁</span>
+            {/* <span className={styles.navIcon}>📁</span> */}
             Workspaces
           </a>
           <a
             href="/tasksDisplay"
             className={`${styles.navLink} ${isActive("/tasksDisplay")}`}
           >
-            <span className={styles.navIcon}>📝</span>
+            {/* <span className={styles.navIcon}>📝</span> */}
             Task Overview
           </a>
           {user?.role === 'admin' && (
@@ -95,41 +109,54 @@ export default function Sidebar({ isOpen, onClose }) {
                 href="/tasksCreate"
                 className={`${styles.navLink} ${isActive("/tasksCreate")}`}
               >
-                <span className={styles.navIcon}>➕</span>
+                {/* <span className={styles.navIcon}>➕</span> */}
                 Create Task
               </a>
               <a
                 href="/workspace-admin"
                 className={`${styles.navLink} ${isActive("/workspace-admin")}`}
               >
-                <span className={styles.navIcon}>⚙️</span>
+                {/* <span className={styles.navIcon}>⚙️</span> */}
                 Workspace Admin
               </a>
             </>
           )}
         </nav>
         <div className={styles.recentWorkspaces}>
-          <h4 className={styles.sectionTitle}>Recent Workspaces</h4>
-          <ul className={styles.workspaceList}>
-            {recentWorkspaces.map((ws) => (
-              <li key={ws.id} className={styles.workspaceItem}>
-                <span
-                  className={styles.workspaceDot}
-                  style={{ backgroundColor: ws.color }}
-                ></span>
-                <div className={styles.workspaceInfo}>
-                  <span className={styles.workspaceName}>{ws.name}</span>
-                  <span className={styles.workspaceCount}>
-                    {ws.tasks} tasks
-                  </span>
-                </div>
-              </li>
-            ))}
-          </ul>
+          <h4 className={styles.sectionTitle}>My Workspaces</h4>
+          {loadingWorkspaces ? (
+            <p className={styles.loadingText}>Loading...</p>
+          ) : workspaces.length > 0 ? (
+            <ul className={styles.workspaceList}>
+              {workspaces.map((ws) => (
+                <li 
+                  key={ws._id} 
+                  className={styles.workspaceItem}
+                  onClick={() => {
+                    navigate(`/workspaces/${ws._id}`);
+                    onClose();
+                  }}
+                >
+                  <span
+                    className={styles.workspaceDot}
+                    style={{ backgroundColor: ws.color }}
+                  ></span>
+                  <div className={styles.workspaceInfo}>
+                    <span className={styles.workspaceName}>{ws.name}</span>
+                    <span className={styles.workspaceCount}>
+                      {ws.members?.length || 0} members
+                    </span>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className={styles.emptyText}>No workspaces yet</p>
+          )}
         </div>
         <div className={styles.logoutSection}>
           <button onClick={handleLogout} className={styles.logoutButton}>
-            <span className={styles.navIcon}>🚪</span>
+            {/* <span className={styles.navIcon}>🚪</span> */}
             Log Out
           </button>
         </div>

@@ -2,19 +2,26 @@ import React, { useState } from "react";
 import TaskItem from "./TaskItem";
 import styles from "./TasksList.module.css";
 
-export default function TasksList({ tasks, workspaceColor }) {
+export default function TasksList({ tasks, workspaceColor, currentUser, onAcceptTask, onToggleTask, onDeleteTask, filterTab }) {
   const [searchTerm, setSearchTerm] = useState("");
   const [sortBy, setSortBy] = useState("dueDate");
   const [filterStatus, setFilterStatus] = useState("All");
   const [filterPriority, setFilterPriority] = useState("All");
 
+  console.log("TasksList received tasks:", tasks);
+  console.log("onAcceptTask function:", onAcceptTask);
+
+  // Ensure tasks is an array
+  const taskArray = Array.isArray(tasks) ? tasks : [];
+
   // Filter tasks
-  let filteredTasks = tasks.filter((task) => {
+  let filteredTasks = taskArray.filter((task) => {
     const matchesSearch =
       task.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      task.assignee.toLowerCase().includes(searchTerm.toLowerCase());
+      (task.description && task.description.toLowerCase().includes(searchTerm.toLowerCase()));
     const matchesStatus =
-      filterStatus === "All" || task.status === filterStatus;
+      filterStatus === "All" || 
+      (filterStatus === "Completed" ? task.completed : !task.completed);
     const matchesPriority =
       filterPriority === "All" || task.priority === filterPriority;
     return matchesSearch && matchesStatus && matchesPriority;
@@ -26,19 +33,48 @@ export default function TasksList({ tasks, workspaceColor }) {
       case "name":
         return a.name.localeCompare(b.name);
       case "priority":
-        const priorityOrder = { High: 1, Medium: 2, Low: 3 };
+        const priorityOrder = { Urgent: 1, High: 2, Medium: 3, Low: 4 };
         return priorityOrder[a.priority] - priorityOrder[b.priority];
       case "status":
-        return a.status.localeCompare(b.status);
+        return (a.completed ? 1 : 0) - (b.completed ? 1 : 0);
       case "dueDate":
       default:
-        return new Date(a.dueDate) - new Date(b.dueDate);
+        return new Date(a.deadline) - new Date(b.deadline);
     }
   });
 
+  // Get appropriate title based on filter tab
+  const getTitle = () => {
+    switch (filterTab) {
+      case "unassigned":
+        return `Unassigned Tasks (${filteredTasks.length})`;
+      case "assigned":
+        return `My Tasks (${filteredTasks.length})`;
+      case "all":
+      default:
+        return `All Tasks (${filteredTasks.length})`;
+    }
+  };
+
+  // Get appropriate empty message based on filter tab
+  const getEmptyMessage = () => {
+    if (taskArray.length === 0) {
+      switch (filterTab) {
+        case "unassigned":
+          return "No unassigned tasks in this workspace";
+        case "assigned":
+          return "No tasks assigned to you in this workspace";
+        case "all":
+        default:
+          return "No tasks in this workspace";
+      }
+    }
+    return "No tasks match your filters";
+  };
+
   return (
     <div className={styles.tasksList}>
-      <h2 className={styles.title}>Tasks ({filteredTasks.length})</h2>
+      <h2 className={styles.title}>{getTitle()}</h2>
 
       <div className={styles.controls}>
         <input
@@ -67,9 +103,8 @@ export default function TasksList({ tasks, workspaceColor }) {
             onChange={(e) => setFilterStatus(e.target.value)}
           >
             <option value="All">Status: All</option>
-            <option value="To Do">To Do</option>
-            <option value="In Progress">In Progress</option>
-            <option value="Done">Done</option>
+            <option value="Pending">Pending</option>
+            <option value="Completed">Completed</option>
           </select>
 
           <select
@@ -78,6 +113,7 @@ export default function TasksList({ tasks, workspaceColor }) {
             onChange={(e) => setFilterPriority(e.target.value)}
           >
             <option value="All">Priority: All</option>
+            <option value="Urgent">Urgent</option>
             <option value="High">High</option>
             <option value="Medium">Medium</option>
             <option value="Low">Low</option>
@@ -89,13 +125,17 @@ export default function TasksList({ tasks, workspaceColor }) {
         {filteredTasks.length > 0 ? (
           filteredTasks.map((task) => (
             <TaskItem
-              key={task.id}
+              key={task._id}
               task={task}
               workspaceColor={workspaceColor}
+              currentUser={currentUser}
+              onAcceptTask={onAcceptTask}
+              onToggleTask={onToggleTask}
+              onDeleteTask={onDeleteTask}
             />
           ))
         ) : (
-          <p className={styles.emptyMessage}>No tasks found</p>
+          <p className={styles.emptyMessage}>{getEmptyMessage()}</p>
         )}
       </div>
     </div>

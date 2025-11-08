@@ -2,24 +2,24 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import styles from "./taskModal.module.css";
 
-export default function TaskModal({ taskName, onSubmit, onClose }) {
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
-  const [description, setDescription] = useState("");
-  const [category, setCategory] = useState("");
-  const [priority, setPriority] = useState("Medium");
-  const [workspace, setWorkspace] = useState("");
+export default function EditTaskModal({ task, onSubmit, onClose }) {
+  const [taskName, setTaskName] = useState(task.name || "");
+  const [startDate, setStartDate] = useState(
+    task.startDate ? new Date(task.startDate).toISOString().split('T')[0] : ""
+  );
+  const [endDate, setEndDate] = useState(
+    task.deadline || task.endDate ? new Date(task.deadline || task.endDate).toISOString().split('T')[0] : ""
+  );
+  const [description, setDescription] = useState(task.description || "");
+  const [category, setCategory] = useState(task.category || "");
+  const [priority, setPriority] = useState(task.priority || "Medium");
+  const [workspace, setWorkspace] = useState(task.workspace || "");
   const [workspaces, setWorkspaces] = useState([]);
   const [workspaceMembers, setWorkspaceMembers] = useState([]);
-  const [assignedTo, setAssignedTo] = useState("");
+  const [assignedTo, setAssignedTo] = useState(task.assignedTo?._id || task.assignedTo || "");
   const [loading, setLoading] = useState(true);
-  const [currentUser, setCurrentUser] = useState(null);
 
   useEffect(() => {
-    const storedUser = localStorage.getItem('user');
-    if (storedUser) {
-      setCurrentUser(JSON.parse(storedUser));
-    }
     fetchWorkspaces();
   }, []);
 
@@ -28,9 +28,8 @@ export default function TaskModal({ taskName, onSubmit, onClose }) {
       fetchWorkspaceMembers();
     } else {
       setWorkspaceMembers([]);
-      setAssignedTo("");
     }
-  }, [workspace]);
+  }, [workspace, workspaces]);
 
   async function fetchWorkspaces() {
     try {
@@ -73,17 +72,23 @@ export default function TaskModal({ taskName, onSubmit, onClose }) {
   function handleSubmit(e) {
     e.preventDefault();
     
+    if (!taskName.trim()) {
+      alert("Task name is required");
+      return;
+    }
+    
     // Find the selected workspace to get its color
     const selectedWorkspace = workspaces.find(ws => ws.name === workspace);
     
     onSubmit({
+      name: taskName,
       startDate,
-      endDate,
+      deadline: endDate,
       description,
       category,
       priority,
       workspace,
-      workspaceColor: selectedWorkspace?.color || "#3b82f6",
+      workspaceColor: selectedWorkspace?.color || task.workspaceColor || "#3b82f6",
       assignedTo: assignedTo || null,
     });
   }
@@ -98,7 +103,7 @@ export default function TaskModal({ taskName, onSubmit, onClose }) {
     <div className={styles.modalBackdrop} onClick={handleBackdropClick}>
       <div className={styles.modalContent}>
         <div className={styles.modalHeader}>
-          <h2 className={styles.modalTitle}>Task Details</h2>
+          <h2 className={styles.modalTitle}>Edit Task</h2>
           <button
             className={styles.closeButton}
             onClick={onClose}
@@ -109,12 +114,22 @@ export default function TaskModal({ taskName, onSubmit, onClose }) {
           </button>
         </div>
 
-        <div className={styles.taskNameDisplay}>
-          <span className={styles.label}>Task Name:</span>
-          <span className={styles.taskName}>{taskName}</span>
-        </div>
-
         <form onSubmit={handleSubmit}>
+          <div className={styles.formGroup}>
+            <label className={styles.label} htmlFor="taskName">
+              Task Name *
+            </label>
+            <input
+              id="taskName"
+              className={styles.input}
+              type="text"
+              value={taskName}
+              onChange={(e) => setTaskName(e.target.value)}
+              placeholder="Enter task name"
+              required
+            />
+          </div>
+
           <div className={styles.formGroup}>
             <label className={styles.label} htmlFor="startDate">
               Start Date
@@ -166,13 +181,15 @@ export default function TaskModal({ taskName, onSubmit, onClose }) {
               onChange={(e) => setCategory(e.target.value)}
             >
               <option value="">Select a category</option>
-              <option value="development">Development</option>
-              <option value="design">Design</option>
-              <option value="testing">Testing</option>
-              <option value="documentation">Documentation</option>
-              <option value="bug">Bug Fix</option>
-              <option value="feature">Feature</option>
-              <option value="other">Other</option>
+              <option value="Development">Development</option>
+              <option value="Design">Design</option>
+              <option value="Testing">Testing</option>
+              <option value="Documentation">Documentation</option>
+              <option value="Bug">Bug Fix</option>
+              <option value="Feature">Feature</option>
+              <option value="Backend">Backend</option>
+              <option value="Frontend">Frontend</option>
+              <option value="Other">Other</option>
             </select>
           </div>
 
@@ -213,10 +230,10 @@ export default function TaskModal({ taskName, onSubmit, onClose }) {
             </select>
           </div>
 
-          {currentUser?.role === 'admin' && workspace && (
+          {workspace && workspaceMembers.length > 0 && (
             <div className={styles.formGroup}>
               <label className={styles.label} htmlFor="assignedTo">
-                Assign To (Optional)
+                Assign To
               </label>
               <select
                 id="assignedTo"
@@ -224,7 +241,7 @@ export default function TaskModal({ taskName, onSubmit, onClose }) {
                 value={assignedTo}
                 onChange={(e) => setAssignedTo(e.target.value)}
               >
-                <option value="">No assignment</option>
+                <option value="">Unassigned</option>
                 {workspaceMembers.map((member) => (
                   <option key={member._id} value={member._id}>
                     {member.name} ({member.email})
@@ -234,7 +251,7 @@ export default function TaskModal({ taskName, onSubmit, onClose }) {
             </div>
           )}
 
-          <div className={styles.buttonGroup}>
+          <div className={styles.modalFooter}>
             <button
               type="button"
               className={styles.cancelButton}
@@ -243,7 +260,7 @@ export default function TaskModal({ taskName, onSubmit, onClose }) {
               Cancel
             </button>
             <button type="submit" className={styles.submitButton}>
-              Create Task
+              Update Task
             </button>
           </div>
         </form>

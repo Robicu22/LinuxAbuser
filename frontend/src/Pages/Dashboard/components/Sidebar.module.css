@@ -161,6 +161,15 @@
   margin-top: 0.125rem;
 }
 
+.loadingText,
+.emptyText {
+  font-size: 0.875rem;
+  color: #94a3b8;
+  text-align: center;
+  padding: 1rem 0;
+  font-style: italic;
+}
+
 /* Logout Section */
 .logoutSection {
   padding: 1.5rem;

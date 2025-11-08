@@ -33,7 +33,7 @@ export default function TaskForm({ tasks, setTasks, onTaskCreated }) {
         description: taskDetails.description || "",
         workspace: taskDetails.workspace || "",
         workspaceColor: taskDetails.workspaceColor || "#3b82f6",
-        priority: "Medium",
+        priority: taskDetails.priority || "Medium",
         deadline: taskDetails.endDate || new Date().toISOString().split('T')[0],
         startDate: taskDetails.startDate || new Date().toISOString().split('T')[0],
         category: taskDetails.category || "",
