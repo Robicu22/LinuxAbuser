@@ -7,6 +7,7 @@ export default function Sidebar({ isOpen, onClose }) {
   const [user, setUser] = useState(null);
   const [workspaces, setWorkspaces] = useState([]);
   const [loadingWorkspaces, setLoadingWorkspaces] = useState(false);
+  const [unreadCount, setUnreadCount] = useState(0);
   const navigate = useNavigate();
 
   // Get current path from window.location
@@ -21,11 +22,35 @@ export default function Sidebar({ isOpen, onClose }) {
         setUser(userData);
         // Fetch workspaces when user is loaded
         fetchWorkspaces(userData.id);
+        // Fetch unread notification count
+        fetchUnreadCount(userData.id);
       } catch (error) {
         console.error("Error parsing user data:", error);
       }
     }
   }, []);
+
+  // Poll for unread count every 30 seconds
+  useEffect(() => {
+    if (user) {
+      const interval = setInterval(() => {
+        fetchUnreadCount(user.id);
+      }, 30000); // 30 seconds
+
+      return () => clearInterval(interval);
+    }
+  }, [user]);
+
+  // Fetch unread notification count
+  const fetchUnreadCount = async (userId) => {
+    try {
+      const response = await axios.get(`http://localhost:5000/api/notifications/unread-count?userId=${userId}`);
+      setUnreadCount(response.data.count || 0);
+    } catch (error) {
+      console.error("Error fetching unread count:", error);
+      setUnreadCount(0);
+    }
+  };
 
   // Fetch user's workspaces
   const fetchWorkspaces = async (userId) => {
@@ -88,6 +113,16 @@ export default function Sidebar({ isOpen, onClose }) {
           >
             {/* <span className={styles.navIcon}>🏠</span> */}
             Home
+          </a>
+          <a
+            href="/inbox"
+            className={`${styles.navLink} ${isActive("/inbox")}`}
+          >
+            {/* <span className={styles.navIcon}>📬</span> */}
+            Inbox
+            {unreadCount > 0 && (
+              <span className={styles.notificationBadge}>{unreadCount}</span>
+            )}
           </a>
           <a
             href="/workspaces"

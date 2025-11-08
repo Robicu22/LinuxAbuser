@@ -10,6 +10,7 @@ import AboutPage from "./Pages/About/AboutPage";
 import WorkspacePage from "./Pages/Workspace/WorkspacePage";
 import WorkspaceAdminPage from "./Pages/Workspace/WorkspaceAdminPage";
 import WorkspaceDetailPage from "./Pages/Workspace/WorkspaceDetailPage";
+import InboxPage from "./Pages/Inbox/InboxPage";
 import App from "./App";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
@@ -29,6 +30,10 @@ const router = createBrowserRouter([
   {
     path: "/dashboard",
     element: <Dashboard />,
+  },
+  {
+    path: "/inbox",
+    element: <InboxPage />,
   },
   {
     path: "/about",

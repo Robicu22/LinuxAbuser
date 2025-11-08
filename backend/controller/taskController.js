@@ -1,6 +1,7 @@
 import Task from "../model/taskModel.js";
 import Workspace from "../model/workspaceModel.js";
 import User from "../model/userModel.js";
+import { createNotification } from "./notificationController.js";
 
 // Create a new task
 export const createTask = async (req, res) => {
@@ -39,6 +40,21 @@ export const createTask = async (req, res) => {
 
     await newTask.save();
     console.log("Task created successfully:", newTask._id);
+
+    // Create notification for assigned user
+    if (assignedTo && assignedTo !== userId) {
+      try {
+        await createNotification(
+          assignedTo,
+          `You have been assigned a new task: "${name}"`,
+          newTask._id,
+          "task_assigned"
+        );
+      } catch (notifError) {
+        console.error("Failed to create notification:", notifError);
+        // Don't fail the task creation if notification fails
+      }
+    }
 
     res.status(201).json({
       message: "Task created successfully",
@@ -167,7 +183,14 @@ export const getTaskById = async (req, res) => {
 // Update a task
 export const updateTask = async (req, res) => {
   try {
-    const { name, description, workspace, workspaceColor, priority, deadline, startDate, completed, category, assignedTo } = req.body;
+    const { name, description, workspace, workspaceColor, priority, deadline, startDate, completed, category, assignedTo, userId } = req.body;
+
+    // Get the old task to check if assignment changed
+    const oldTask = await Task.findById(req.params.id);
+    
+    if (!oldTask) {
+      return res.status(404).json({ message: "Task not found" });
+    }
 
     const task = await Task.findByIdAndUpdate(
       req.params.id,
@@ -180,6 +203,28 @@ export const updateTask = async (req, res) => {
     }
 
     console.log("Task updated successfully:", task._id);
+
+    // Create notification if task was newly assigned or reassigned to a different user
+    const oldAssignedTo = oldTask.assignedTo?.toString();
+    const newAssignedTo = assignedTo?.toString();
+    
+    if (newAssignedTo && newAssignedTo !== oldAssignedTo && newAssignedTo !== userId) {
+      try {
+        const message = oldAssignedTo 
+          ? `Task "${name}" has been reassigned to you`
+          : `You have been assigned to task: "${name}"`;
+        
+        await createNotification(
+          newAssignedTo,
+          message,
+          task._id,
+          "task_updated"
+        );
+      } catch (notifError) {
+        console.error("Failed to create notification:", notifError);
+        // Don't fail the task update if notification fails
+      }
+    }
 
     res.status(200).json({
       message: "Task updated successfully",

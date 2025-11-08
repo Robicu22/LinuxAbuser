@@ -6,6 +6,7 @@ import dotenv from 'dotenv';
 import userRoutes from './routes/userRoutes.js';
 import taskRoutes from './routes/taskRoutes.js';
 import workspaceRoutes from './routes/workspaceRoutes.js';
+import notificationRoutes from './routes/notificationRoutes.js';
 
 dotenv.config();
 
@@ -23,6 +24,7 @@ app.use(bodyParser.json());
 app.use("/api", userRoutes);
 app.use("/api", taskRoutes);
 app.use("/api", workspaceRoutes);
+app.use("/api", notificationRoutes);
 
 connectDB();
 

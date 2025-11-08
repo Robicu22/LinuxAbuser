@@ -81,7 +81,7 @@ export default function TaskPage() {
       </button>
       <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
       <div className={styles.pageContainer}>
-        <h1 className={styles.title}>My Tasks</h1>
+        <h1 className={styles.title}>Tasks</h1>
         <TaskForm tasks={tasks} setTasks={setTasks} onTaskCreated={fetchTasks} />
         {loading ? (
           <p className={styles.loadingMessage}>Loading tasks...</p>
