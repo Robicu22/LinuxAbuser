@@ -1,54 +1,74 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import TaskCard from "./TaskCard";
 import styles from "./RecentTasks.module.css";
 
-const sampleTasks = [
-  {
-    id: 1,
-    name: "Task Example 1",
-    description: "Users can't login with special characters",
-    workspace: "Workspace Example 1",
-    workspaceColor: "#3b82f6",
-    priority: "High",
-    deadline: "2025-11-10",
-  },
-  {
-    id: 2,
-    name: "Task Example 2",
-    description: "Redesign dashboard with new color scheme",
-    workspace: "Workspace Example 2",
-    workspaceColor: "#10b981",
-    priority: "Medium",
-    deadline: "2025-11-15",
-  },
-  {
-    id: 3,
-    name: "Task Example 3",
-    description: "Optimize query performance for user analytics",
-    workspace: "Workspace Example 3",
-    workspaceColor: "#f59e0b",
-    priority: "Low",
-    deadline: "2025-11-20",
-  },
-  {
-    id: 4,
-    name: "Task Example 4",
-    description: "Conduct security review of authentication flow",
-    workspace: "Workspace Example 4",
-    workspaceColor: "#ef4444",
-    priority: "High",
-    deadline: "2025-11-12",
-  },
-];
-
 export default function RecentTasks() {
+  const [tasks, setTasks] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    fetchRecentTasks();
+  }, []);
+
+  const fetchRecentTasks = async () => {
+    try {
+      setLoading(true);
+      setError("");
+
+      // Get user from localStorage
+      const storedUser = localStorage.getItem('user');
+      if (!storedUser) {
+        setError("Please log in to view tasks");
+        setLoading(false);
+        return;
+      }
+
+      const user = JSON.parse(storedUser);
+      const response = await axios.get(`http://localhost:5000/api/tasks/recent?userId=${user.id}`);
+      
+      console.log("Recent tasks fetched:", response.data);
+      const tasksData = response.data.tasks || response.data;
+      setTasks(Array.isArray(tasksData) ? tasksData : []);
+    } catch (error) {
+      console.error("Error fetching recent tasks:", error);
+      setError("Failed to load tasks");
+      setTasks([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <section className={styles.tasksSection}>
+        <h2 className={styles.mainTitle}>Recent Tasks</h2>
+        <div className={styles.loadingMessage}>Loading tasks...</div>
+      </section>
+    );
+  }
+
+  if (error) {
+    return (
+      <section className={styles.tasksSection}>
+        <h2 className={styles.mainTitle}>Recent Tasks</h2>
+        <div className={styles.errorMessage}>{error}</div>
+      </section>
+    );
+  }
+
   return (
     <section className={styles.tasksSection}>
       <h2 className={styles.mainTitle}>Recent Tasks</h2>
       <div className={styles.tasksScroll}>
-        {sampleTasks.map((task) => (
-          <TaskCard key={task.id} task={task} />
-        ))}
+        {tasks.length === 0 ? (
+          <p className={styles.emptyMessage}>No tasks yet. Create your first task!</p>
+        ) : (
+          tasks.map((task) => (
+            <TaskCard key={task._id} task={task} />
+          ))
+        )}
       </div>
     </section>
   );

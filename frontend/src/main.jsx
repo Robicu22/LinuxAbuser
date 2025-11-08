@@ -7,6 +7,9 @@ import TaskPageCreate from "./Pages/taskpagecreate/TaskPageCreate";
 import TaskPageDisplay from "./Pages/taskpagedisplay/TaskPageDisplay";
 import Dashboard from "./Pages/Dashboard/Dashboard";
 import AboutPage from "./Pages/About/AboutPage";
+import WorkspacePage from "./Pages/Workspace/WorkspacePage";
+import WorkspaceAdminPage from "./Pages/Workspace/WorkspaceAdminPage";
+import WorkspaceDetailPage from "./Pages/Workspace/WorkspaceDetailPage";
 import App from "./App";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
@@ -32,6 +35,18 @@ const router = createBrowserRouter([
     element: <AboutPage />,
   },
   {
+    path: "/workspaces",
+    element: <WorkspacePage />,
+  },
+  {
+    path: "/workspace-admin",
+    element: <WorkspaceAdminPage />,
+  },
+  {
+    path: "/workspaces/:id",
+    element: <WorkspaceDetailPage />,
+  },
+  {
     path: "/tasksCreate",
     element: <TaskPageCreate />,
   },
@@ -42,7 +57,8 @@ const router = createBrowserRouter([
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <React.StrictMode>
+  
     <RouterProvider router={router} />
-  </React.StrictMode>
+  
 );
+

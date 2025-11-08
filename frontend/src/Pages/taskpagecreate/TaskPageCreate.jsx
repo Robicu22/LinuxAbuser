@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
 import TaskForm from "./components/TaskForm";
 import Task from "./components/Task";
 import Sidebar from "../Dashboard/components/Sidebar";
@@ -7,17 +8,66 @@ import styles from "./taskPageCreate.module.css";
 export default function TaskPage() {
   const [tasks, setTasks] = useState([]);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
-  function handleToggleTask(id) {
-    setTasks(
-      tasks.map((task) =>
-        task.id === id ? { ...task, completed: !task.completed } : task
-      )
-    );
+  useEffect(() => {
+    fetchTasks();
+  }, []);
+
+  const fetchTasks = async () => {
+    try {
+      setLoading(true);
+      const storedUser = localStorage.getItem('user');
+      if (!storedUser) {
+        setError("Please log in to view tasks");
+        setLoading(false);
+        return;
+      }
+
+      const user = JSON.parse(storedUser);
+      const response = await axios.get(`http://localhost:5000/api/tasks?userId=${user.id}`);
+      
+      console.log("Tasks fetched:", response.data);
+      const tasksData = response.data.tasks || response.data;
+      setTasks(Array.isArray(tasksData) ? tasksData : []);
+    } catch (error) {
+      console.error("Error fetching tasks:", error);
+      setError("Failed to load tasks");
+      setTasks([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  async function handleToggleTask(id) {
+    try {
+      const response = await axios.patch(`http://localhost:5000/api/tasks/${id}/toggle`);
+      console.log("Task toggled:", response.data);
+      
+      // Update local state
+      setTasks(
+        tasks.map((task) =>
+          task._id === id ? response.data.task : task
+        )
+      );
+    } catch (error) {
+      console.error("Error toggling task:", error);
+      alert("Failed to update task");
+    }
   }
 
-  function handleDeleteTask(id) {
-    setTasks(tasks.filter((task) => task.id !== id));
+  async function handleDeleteTask(id) {
+    try {
+      await axios.delete(`http://localhost:5000/api/tasks/${id}`);
+      console.log("Task deleted:", id);
+      
+      // Update local state
+      setTasks(tasks.filter((task) => task._id !== id));
+    } catch (error) {
+      console.error("Error deleting task:", error);
+      alert("Failed to delete task");
+    }
   }
 
   return (
@@ -32,21 +82,27 @@ export default function TaskPage() {
       <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
       <div className={styles.pageContainer}>
         <h1 className={styles.title}>My Tasks</h1>
-        <TaskForm tasks={tasks} setTasks={setTasks} />
-        <div className={styles.taskList}>
-          {tasks.length === 0 ? (
-            <p className={styles.emptyMessage}>No tasks yet. Add one above!</p>
-          ) : (
-            tasks.map((task) => (
-              <Task
-                key={task.id}
-                task={task}
-                onToggle={handleToggleTask}
-                onDelete={handleDeleteTask}
-              />
-            ))
-          )}
-        </div>
+        <TaskForm tasks={tasks} setTasks={setTasks} onTaskCreated={fetchTasks} />
+        {loading ? (
+          <p className={styles.loadingMessage}>Loading tasks...</p>
+        ) : error ? (
+          <p className={styles.errorMessage}>{error}</p>
+        ) : (
+          <div className={styles.taskList}>
+            {tasks.length === 0 ? (
+              <p className={styles.emptyMessage}>No tasks yet. Add one above!</p>
+            ) : (
+              tasks.map((task) => (
+                <Task
+                  key={task._id}
+                  task={task}
+                  onToggle={handleToggleTask}
+                  onDelete={handleDeleteTask}
+                />
+              ))
+            )}
+          </div>
+        )}
       </div>
     </div>
   );

@@ -13,7 +13,7 @@ export default function Task({ task, onToggle, onDelete }) {
           type="checkbox"
           className={styles.checkbox}
           checked={task.completed}
-          onChange={() => onToggle(task.id)}
+          onChange={() => onToggle(task._id || task.id)}
         />
         <div className={styles.taskInfo}>
           <span className={styles.taskText}>{task.name}</span>
@@ -25,6 +25,11 @@ export default function Task({ task, onToggle, onDelete }) {
               {task.workspace && (
                 <span className={styles.workspaceBadge}>{task.workspace}</span>
               )}
+              {task.assignedTo && (
+                <span className={styles.assignedBadge}>
+                  Assigned: {task.assignedTo.name}
+                </span>
+              )}
             </div>
           )}
           {showDetails && (
@@ -35,10 +40,10 @@ export default function Task({ task, onToggle, onDelete }) {
                   {new Date(task.startDate).toLocaleDateString("en-GB")}
                 </div>
               )}
-              {task.endDate && (
+              {(task.deadline || task.endDate) && (
                 <div className={styles.detailItem}>
                   <strong>End Date:</strong>{" "}
-                  {new Date(task.endDate).toLocaleDateString("en-GB")}
+                  {new Date(task.deadline || task.endDate).toLocaleDateString("en-GB")}
                 </div>
               )}
               {task.description && (
@@ -51,7 +56,7 @@ export default function Task({ task, onToggle, onDelete }) {
         </div>
       </div>
       <div className={styles.actions}>
-        {(task.startDate || task.endDate || task.description) && (
+        {(task.startDate || task.deadline || task.endDate || task.description) && (
           <button
             className={styles.detailsButton}
             onClick={() => setShowDetails(!showDetails)}
@@ -62,7 +67,7 @@ export default function Task({ task, onToggle, onDelete }) {
         )}
         <button
           className={styles.deleteButton}
-          onClick={() => onDelete(task.id)}
+          onClick={() => onDelete(task._id || task.id)}
           aria-label="Delete task"
         >
           ✕

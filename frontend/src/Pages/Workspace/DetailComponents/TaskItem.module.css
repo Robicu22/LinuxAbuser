@@ -1,0 +1,109 @@
+.taskItem {
+  background: #2d2d2d;
+  border: 1px solid #404040;
+  border-radius: 8px;
+  padding: 1.25rem;
+  transition: all 0.2s;
+}
+
+.taskItem:hover {
+  border-color: #505050;
+  transform: translateX(4px);
+}
+
+.taskHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.taskName {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin: 0;
+  flex: 1;
+}
+
+.priority {
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  flex-shrink: 0;
+}
+
+.priorityHigh {
+  background: rgba(239, 68, 68, 0.2);
+  color: #ef4444;
+}
+
+.priorityMedium {
+  background: rgba(245, 158, 11, 0.2);
+  color: #f59e0b;
+}
+
+.priorityLow {
+  background: rgba(16, 185, 129, 0.2);
+  color: #10b981;
+}
+
+.taskDetails {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.status {
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.8125rem;
+  font-weight: 500;
+}
+
+.statusToDo {
+  background: rgba(107, 114, 128, 0.2);
+  color: #9ca3af;
+}
+
+.statusInProgress {
+  background: rgba(59, 130, 246, 0.2);
+  color: #3b82f6;
+}
+
+.statusDone {
+  background: rgba(16, 185, 129, 0.2);
+  color: #10b981;
+}
+
+.assignee,
+.dueDate {
+  font-size: 0.875rem;
+  color: #9ca3af;
+}
+
+@media (max-width: 480px) {
+  .taskItem {
+    padding: 1rem;
+  }
+
+  .taskHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .taskName {
+    font-size: 1rem;
+  }
+
+  .taskDetails {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+}

@@ -4,6 +4,8 @@ import cors from 'cors';
 import { connectDB } from './config/db.js';
 import dotenv from 'dotenv';
 import userRoutes from './routes/userRoutes.js';
+import taskRoutes from './routes/taskRoutes.js';
+import workspaceRoutes from './routes/workspaceRoutes.js';
 
 dotenv.config();
 
@@ -19,6 +21,8 @@ app.use(cors({
 app.use(bodyParser.json());
 
 app.use("/api", userRoutes);
+app.use("/api", taskRoutes);
+app.use("/api", workspaceRoutes);
 
 connectDB();
 

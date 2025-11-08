@@ -15,17 +15,21 @@ export const createUser = async (req, res) => {
             return res.status(400).json({ message: 'User already exists with this email' });
         }
         
-        const newUser = new User({ name, email, password });
+        // Set role to admin if email is admin@gmail.com
+        const role = email === 'admin@gmail.com' ? 'admin' : 'user';
+        
+        const newUser = new User({ name, email, password, role });
         await newUser.save();
         
-        console.log("User created successfully:", newUser._id);
+        console.log("User created successfully:", newUser._id, "Role:", role);
         
         res.status(201).json({ 
             message: 'User created successfully',
             user: {
                 id: newUser._id,
                 name: newUser.name,
-                email: newUser.email
+                email: newUser.email,
+                role: newUser.role
             }
         });
     } catch (error) {
@@ -62,7 +66,8 @@ export const loginUser = async (req, res) => {
             user: {
                 id: user._id,
                 name: user.name,
-                email: user.email
+                email: user.email,
+                role: user.role
             }
         });
     } catch (error) {
@@ -73,7 +78,19 @@ export const loginUser = async (req, res) => {
 
 export const getUsers = async (req, res) => {
     try {
-        const users = await User.find();
+        const { email } = req.query;
+        
+        // If email query param provided, search by email
+        if (email) {
+            const user = await User.findOne({ email }).select('-password');
+            if (!user) {
+                return res.status(404).json({ message: 'User not found' });
+            }
+            return res.status(200).json(user);
+        }
+        
+        // Otherwise return all users (without passwords)
+        const users = await User.find().select('-password');
         res.status(200).json(users);
     } catch (error) {
         res.status(500).json({ message: 'Error fetching users', error });
