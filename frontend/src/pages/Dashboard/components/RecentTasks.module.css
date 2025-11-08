@@ -1,0 +1,41 @@
+.tasksSection {
+  margin-bottom: 2rem;
+}
+
+.mainTitle {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+  color: #1f2937;
+}
+
+.tasksScroll {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  padding-bottom: 1rem;
+}
+
+.tasksScroll::-webkit-scrollbar {
+  height: 8px;
+}
+
+.tasksScroll::-webkit-scrollbar-track {
+  background: #f3f4f6;
+  border-radius: 10px;
+}
+
+.tasksScroll::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 10px;
+}
+
+.tasksScroll::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
+}
+
+@media (max-width: 600px) {
+  .mainTitle {
+    font-size: 1.25rem;
+  }
+}
