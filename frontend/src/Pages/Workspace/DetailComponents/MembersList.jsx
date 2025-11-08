@@ -1,0 +1,118 @@
+import React, { useState } from "react";
+import MemberItem from "./MemberItem";
+import styles from "./MembersList.module.css";
+
+export default function MembersList({ members, workspaceColor, workspaceTasks = [], onRemoveMember, creatorId }) {
+  const [searchTerm, setSearchTerm] = useState("");
+  const [sortBy, setSortBy] = useState("name");
+  const [filterRole, setFilterRole] = useState("All");
+
+  // Get initials from name
+  const getInitials = (name) => {
+    return name
+      .split(' ')
+      .map(word => word[0])
+      .join('')
+      .toUpperCase()
+      .slice(0, 2);
+  };
+
+  // Calculate task count for a member
+  const getTaskCount = (memberId) => {
+    return workspaceTasks.filter(task => 
+      task.assignedTo && (task.assignedTo._id === memberId || task.assignedTo === memberId)
+    ).length;
+  };
+
+  // Convert members array to proper format if needed
+  const formattedMembers = Array.isArray(members) ? members.map(member => {
+    if (typeof member === 'string') {
+      // member is just an ID, this shouldn't happen with populated data
+      return null;
+    }
+    return {
+      id: member._id,
+      name: member.name || 'Unknown',
+      initials: getInitials(member.name || 'Unknown'),
+      role: member._id === creatorId ? 'Creator' : 'Member',
+      email: member.email || '',
+      tasksCount: getTaskCount(member._id),
+    };
+  }).filter(Boolean) : [];
+
+  // Filter members
+  let filteredMembers = formattedMembers.filter((member) => {
+    const matchesSearch =
+      member.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      member.email.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesRole = filterRole === "All" || member.role === filterRole;
+    return matchesSearch && matchesRole;
+  });
+
+  // Sort members
+  filteredMembers = [...filteredMembers].sort((a, b) => {
+    switch (sortBy) {
+      case "name":
+        return a.name.localeCompare(b.name);
+      case "role":
+        return a.role.localeCompare(b.role);
+      case "tasks":
+        return b.tasksCount - a.tasksCount;
+      default:
+        return 0;
+    }
+  });
+
+  return (
+    <div className={styles.membersList}>
+      <h2 className={styles.title}>Members ({filteredMembers.length})</h2>
+
+      <div className={styles.controls}>
+        <input
+          type="text"
+          placeholder="Search members..."
+          className={styles.searchInput}
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+
+        <div className={styles.filters}>
+          <select
+            className={styles.select}
+            value={sortBy}
+            onChange={(e) => setSortBy(e.target.value)}
+          >
+            <option value="name">Sort by: Name</option>
+            <option value="role">Sort by: Role</option>
+            <option value="tasks">Sort by: Tasks Count</option>
+          </select>
+
+          <select
+            className={styles.select}
+            value={filterRole}
+            onChange={(e) => setFilterRole(e.target.value)}
+          >
+            <option value="All">Role: All</option>
+            <option value="Creator">Creator</option>
+            <option value="Member">Member</option>
+          </select>
+        </div>
+      </div>
+
+      <div className={styles.membersContainer}>
+        {filteredMembers.length > 0 ? (
+          filteredMembers.map((member) => (
+            <MemberItem
+              key={member.id}
+              member={member}
+              workspaceColor={workspaceColor}
+              onRemove={onRemoveMember && member.role !== 'Creator' ? () => onRemoveMember(member.id) : null}
+            />
+          ))
+        ) : (
+          <p className={styles.emptyMessage}>No members found</p>
+        )}
+      </div>
+    </div>
+  );
+}
