@@ -2,6 +2,7 @@ import LogInForm from "./components/LogInForm";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import API_URL from "../../config/api";
 import formStyles from "./components/form.module.css";
 import styles from "./loginPage.module.css";
 
@@ -16,11 +17,12 @@ export default function LogInPage() {
       setError("");
       
       console.log("Attempting login with:", { email });
-      
-      const response = await axios.post('http://localhost:5000/api/login', {
-        email: email,
-        password: pass
-      });
+      // If the user input looks like an email use the email field, otherwise send it as a name
+      const payload = email && email.includes('@')
+        ? { email: email, password: pass }
+        : { name: email, password: pass };
+
+      const response = await axios.post(`${API_URL}/login`, payload);
       
       console.log("Login successful:", response.data);
       

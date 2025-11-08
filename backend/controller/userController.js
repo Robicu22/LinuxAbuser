@@ -1,21 +1,25 @@
 import User from "../model/userModel.js";
+import jwt from 'jsonwebtoken';
 
 export const createUser = async (req, res) => {
     try {
         console.log("Signup request received:", req.body);
         const { name, email, password } = req.body;
         
-        if (!name || !email || !password) {
-            return res.status(400).json({ message: 'Name, email, and password are required' });
+        if (!name || !password) {
+            return res.status(400).json({ message: 'Name and password are required' });
         }
-        
-        // Check if user already exists
-        const existingUser = await User.findOne({ email });
+
+        // If email isn't provided, create a dev-local email so the schema constraint is satisfied
+        const userEmail = email || `${name.replace(/\s+/g, '').toLowerCase()}@local.test`;
+
+        // Check if user already exists (by email or name)
+        const existingUser = await User.findOne({ $or: [{ email: userEmail }, { name }] });
         if (existingUser) {
-            return res.status(400).json({ message: 'User already exists with this email' });
+            return res.status(400).json({ message: 'User already exists with this email or name' });
         }
         
-        const newUser = new User({ name, email, password });
+        const newUser = new User({ name, email: userEmail, password });
         await newUser.save();
         
         console.log("User created successfully:", newUser._id);
@@ -37,28 +41,32 @@ export const createUser = async (req, res) => {
 export const loginUser = async (req, res) => {
     try {
         console.log("Login request received:", req.body);
-        const { email, password } = req.body;
-        
-        if (!email || !password) {
-            return res.status(400).json({ message: 'Email and password are required' });
+        const { email, name, password } = req.body;
+
+        if ((!email && !name) || !password) {
+            return res.status(400).json({ message: 'Email or name and password are required' });
         }
-        
-        // Find user by email
-        const user = await User.findOne({ email });
+
+        // Find user by email or name
+        const user = await User.findOne(email ? { email } : { name });
         if (!user) {
-            return res.status(401).json({ message: 'Invalid email or password' });
+            return res.status(401).json({ message: 'Invalid credentials' });
         }
-        
+
         // Check password
         const isPasswordValid = await user.comparePassword(password);
         if (!isPasswordValid) {
-            return res.status(401).json({ message: 'Invalid email or password' });
+            return res.status(401).json({ message: 'Invalid credentials' });
         }
-        
+
         console.log("User logged in successfully:", user._id);
-        
+
+        // Sign JWT
+        const token = jwt.sign({ id: user._id, name: user.name }, process.env.JWT_SECRET || 'dev_secret', { expiresIn: '1h' });
+
         res.status(200).json({ 
             message: 'Login successful',
+            token,
             user: {
                 id: user._id,
                 name: user.name,
