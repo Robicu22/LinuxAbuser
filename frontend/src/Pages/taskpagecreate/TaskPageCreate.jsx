@@ -6,6 +6,7 @@ import styles from "./taskPageCreate.module.css";
 
 export default function TaskPage() {
   const [tasks, setTasks] = useState([]);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   function handleToggleTask(id) {
     setTasks(
@@ -21,7 +22,14 @@ export default function TaskPage() {
 
   return (
     <div className={styles.pageWrapper}>
-      <Sidebar />
+      <button
+        className={styles.menuButton}
+        onClick={() => setIsSidebarOpen(true)}
+        aria-label="Open menu"
+      >
+        ☰
+      </button>
+      <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
       <div className={styles.pageContainer}>
         <h1 className={styles.title}>My Tasks</h1>
         <TaskForm tasks={tasks} setTasks={setTasks} />

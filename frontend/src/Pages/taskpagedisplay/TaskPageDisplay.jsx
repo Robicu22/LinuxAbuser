@@ -4,6 +4,8 @@ import Sidebar from "../Dashboard/components/Sidebar";
 import styles from "./taskPageDisplay.module.css";
 
 export default function TaskPageDisplay() {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
   // Sample tasks for display purposes
   const [tasks, setTasks] = useState([
     {
@@ -52,7 +54,14 @@ export default function TaskPageDisplay() {
 
   return (
     <div className={styles.pageWrapper}>
-      <Sidebar />
+      <button
+        className={styles.menuButton}
+        onClick={() => setIsSidebarOpen(true)}
+        aria-label="Open menu"
+      >
+        ☰
+      </button>
+      <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
       <div className={styles.pageContainer}>
         <h1 className={styles.title}>Task Overview</h1>
         <div className={styles.taskList}>

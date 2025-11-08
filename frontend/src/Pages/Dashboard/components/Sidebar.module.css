@@ -9,11 +9,28 @@
   position: fixed;
   height: 100vh;
   overflow-y: auto;
-  z-index: 1000;
+  z-index: 1001;
   box-shadow: 2px 0 8px rgba(0, 0, 0, 0.5);
   top: 0;
-  left: 0;
+  left: -280px;
   backdrop-filter: blur(10px);
+  transition: left 0.3s ease-in-out;
+}
+
+.sidebar.open {
+  left: 0;
+}
+
+/* Overlay */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  backdrop-filter: blur(2px);
 }
 
 /* Profile Section */
@@ -172,19 +189,12 @@
 /* Mobile Responsive */
 @media (max-width: 768px) {
   .sidebar {
-    width: 100%;
-    position: static;
-    height: auto;
-    border-right: none;
-    border-bottom: 1px solid rgba(96, 165, 250, 0.2);
+    width: 280px;
+    left: -280px;
   }
 
-  .recentWorkspaces {
-    display: none;
-  }
-
-  .logoutSection {
-    display: none;
+  .sidebar.open {
+    left: 0;
   }
 }
 
