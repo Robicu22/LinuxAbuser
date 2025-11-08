@@ -8,6 +8,8 @@
 }
 .heading {
   margin: 0 0 1rem;
+  color: #60a5fa;
+  font-size: 1.75rem;
 }
 .grid {
   display: grid;

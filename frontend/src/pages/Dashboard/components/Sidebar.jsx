@@ -1,6 +1,7 @@
 import React from "react";
 import styles from "./Sidebar.module.css";
 
+// Example workspace data - will be replaced with database later
 const recentWorkspaces = [
   { id: 1, name: "Workspace Example 1", color: "#3b82f6", tasks: 12 },
   { id: 2, name: "Workspace Example 2", color: "#10b981", tasks: 8 },
@@ -26,11 +27,11 @@ export default function Sidebar() {
           <span className={styles.navIcon}>📁</span>
           Workspaces
         </a>
-        <a href="/tasks" className={styles.navLink}>
+        <a href="/tasksDisplay" className={styles.navLink}>
           <span className={styles.navIcon}>📝</span>
           Task Overview
         </a>
-        <a href="/tasks" className={styles.navLink}>
+        <a href="/tasksCreate" className={styles.navLink}>
           <span className={styles.navIcon}>➕</span>
           Create Task
         </a>
@@ -51,6 +52,12 @@ export default function Sidebar() {
             </li>
           ))}
         </ul>
+      </div>
+      <div className={styles.logoutSection}>
+        <a href="/login" className={styles.logoutButton}>
+          <span className={styles.navIcon}>🚪</span>
+          Log Out
+        </a>
       </div>
     </aside>
   );

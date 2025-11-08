@@ -8,7 +8,8 @@
   font-size: 1.5rem;
   font-weight: bold;
   margin-bottom: 1rem;
-  color: #1f2937;
+  color: #60a5fa;
+  text-shadow: 0 0 10px rgba(96, 165, 250, 0.3);
 }
 
 .tasksScroll {
@@ -26,17 +27,17 @@
 }
 
 .tasksScroll::-webkit-scrollbar-track {
-  background: #f3f4f6;
+  background: rgba(30, 41, 59, 0.5);
   border-radius: 10px;
 }
 
 .tasksScroll::-webkit-scrollbar-thumb {
-  background: #d1d5db;
+  background: rgba(96, 165, 250, 0.3);
   border-radius: 10px;
 }
 
 .tasksScroll::-webkit-scrollbar-thumb:hover {
-  background: #9ca3af;
+  background: rgba(96, 165, 250, 0.5);
 }
 
 @media (max-width: 600px) {

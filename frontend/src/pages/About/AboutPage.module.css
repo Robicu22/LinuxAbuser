@@ -3,12 +3,14 @@
   max-width: 1000px;
   margin: 0 auto;
   padding: 2rem 1rem;
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+  min-height: 100vh;
 }
 
 .container p {
   font-size: 1.125rem;
   line-height: 1.7;
-  color: #444;
+  color: #cbd5e1;
   margin: 0;
 }
 

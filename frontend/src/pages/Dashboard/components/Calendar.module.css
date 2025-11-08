@@ -12,40 +12,41 @@
 }
 
 .navBtn {
-  background: white;
-  border: 1px solid #e5e7eb;
+  background: rgba(30, 41, 59, 0.5);
+  border: 1px solid rgba(96, 165, 250, 0.2);
   border-radius: 8px;
-  width: 56px;
-  height: 56px;
+  width: 45px;
+  height: 45px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   font-size: 2rem;
-  color: #6b7280;
+  color: #cbd5e1;
   transition: all 0.2s;
   padding: 0;
   line-height: 1;
 }
 
 .navBtn:hover {
-  background: #f3f4f6;
-  color: #1f2937;
-  border-color: #d1d5db;
+  background: rgba(96, 165, 250, 0.2);
+  color: #60a5fa;
+  border-color: rgba(96, 165, 250, 0.4);
 }
 
 .mainTitle {
   font-size: 1.75rem;
   font-weight: bold;
-  color: #1f2937;
+  color: #60a5fa;
   cursor: pointer;
   margin: 0;
   transition: color 0.2s;
   white-space: nowrap;
+  text-shadow: 0 0 10px rgba(96, 165, 250, 0.3);
 }
 
 .mainTitle:hover {
-  color: #3b82f6;
+  color: #93c5fd;
 }
 
 .calendarGrid {
@@ -57,35 +58,37 @@
 .calendarHeader {
   text-align: center;
   font-weight: bold;
-  color: #6b7280;
+  color: #94a3b8;
   padding: 0.44rem;
   font-size: 1.3rem;
 }
 
 .calendarDay {
   aspect-ratio: 1;
-  border: 1px solid #e5e7eb;
+  border: 1px solid rgba(96, 165, 250, 0.2);
   border-radius: 7px;
   padding: 0.44rem;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  background-color: white;
+  background-color: rgba(30, 41, 59, 0.5);
   cursor: pointer;
   transition: all 0.2s;
   position: relative;
 }
 
 .calendarDay:hover {
-  border-color: #3b82f6;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-color: rgba(96, 165, 250, 0.4);
+  box-shadow: 0 2px 8px rgba(96, 165, 250, 0.2);
+  background-color: rgba(30, 41, 59, 0.7);
 }
 
 .calendarDay.today {
-  background-color: #eff6ff;
-  border-color: #3b82f6;
+  background-color: rgba(96, 165, 250, 0.15);
+  border-color: #60a5fa;
   font-weight: bold;
+  box-shadow: 0 0 12px rgba(96, 165, 250, 0.3);
 }
 
 .calendarDayEmpty {
@@ -94,7 +97,7 @@
 
 .dayNumber {
   font-size: 1.3rem;
-  color: #1f2937;
+  color: #e2e8f0;
 }
 
 .taskLines {

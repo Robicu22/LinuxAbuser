@@ -1,8 +1,8 @@
 /* Sidebar */
 .sidebar {
   width: 280px;
-  background: #fff;
-  border-right: 1px solid #e0e0e0;
+  background: rgba(30, 41, 59, 0.95);
+  border-right: 1px solid rgba(96, 165, 250, 0.2);
   padding: 0;
   display: flex;
   flex-direction: column;
@@ -10,23 +10,24 @@
   height: 100vh;
   overflow-y: auto;
   z-index: 1000;
-  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.5);
   top: 0;
   left: 0;
+  backdrop-filter: blur(10px);
 }
 
 /* Profile Section */
 .profile {
   text-align: center;
   padding: 1.5rem 1.5rem 1.5rem;
-  border-bottom: 1px solid #e0e0e0;
+  border-bottom: 1px solid rgba(96, 165, 250, 0.2);
 }
 
 .avatar {
   width: 80px;
   height: 80px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -34,45 +35,47 @@
   font-weight: bold;
   color: #fff;
   margin: 0 auto 0.75rem;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
 }
 
 .profileName {
   margin: 0 0 0.25rem;
   font-size: 1.25rem;
-  color: #333;
+  color: #e2e8f0;
 }
 
 .profileRole {
   margin: 0;
   font-size: 0.875rem;
-  color: #666;
+  color: #94a3b8;
 }
 
 /* Navigation */
 .nav {
   padding: 1.5rem 0;
-  border-bottom: 1px solid #e0e0e0;
+  border-bottom: 1px solid rgba(96, 165, 250, 0.2);
 }
 
 .navLink {
   display: flex;
   align-items: center;
   padding: 0.875rem 1.5rem;
-  color: #666;
+  color: #cbd5e1;
   text-decoration: none;
   transition: all 0.2s;
   font-weight: 500;
 }
 
 .navLink:hover {
-  background: #f5f5f5;
-  color: #667eea;
+  background: rgba(96, 165, 250, 0.1);
+  color: #60a5fa;
 }
 
 .navLink.active {
-  background: #f0f4ff;
-  color: #667eea;
-  border-right: 3px solid #667eea;
+  background: rgba(96, 165, 250, 0.15);
+  color: #60a5fa;
+  border-right: 3px solid #60a5fa;
+  text-shadow: 0 0 10px rgba(96, 165, 250, 0.3);
 }
 
 .navIcon {
@@ -89,7 +92,7 @@
 .sectionTitle {
   font-size: 0.875rem;
   font-weight: 600;
-  color: #999;
+  color: #94a3b8;
   text-transform: uppercase;
   margin: 0 0 1rem;
   letter-spacing: 0.5px;
@@ -130,13 +133,40 @@
 .workspaceName {
   font-size: 0.875rem;
   font-weight: 500;
-  color: #333;
+  color: #e2e8f0;
 }
 
 .workspaceCount {
   font-size: 0.75rem;
-  color: #999;
+  color: #94a3b8;
   margin-top: 0.125rem;
+}
+
+/* Logout Section */
+.logoutSection {
+  padding: 1.5rem;
+  margin-top: auto;
+  border-top: 1px solid rgba(96, 165, 250, 0.2);
+}
+
+.logoutButton {
+  display: flex;
+  align-items: center;
+  padding: 0.875rem 1.5rem;
+  color: #fca5a5;
+  text-decoration: none;
+  transition: all 0.2s;
+  font-weight: 500;
+  border-radius: 8px;
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+.logoutButton:hover {
+  background: rgba(239, 68, 68, 0.2);
+  color: #fee;
+  border-color: rgba(239, 68, 68, 0.4);
+  transform: translateX(4px);
 }
 
 /* Mobile Responsive */
@@ -146,10 +176,14 @@
     position: static;
     height: auto;
     border-right: none;
-    border-bottom: 1px solid #e0e0e0;
+    border-bottom: 1px solid rgba(96, 165, 250, 0.2);
   }
 
   .recentWorkspaces {
+    display: none;
+  }
+
+  .logoutSection {
     display: none;
   }
 }
