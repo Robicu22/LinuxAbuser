@@ -1,0 +1,36 @@
+.cta {
+  padding: 2.25rem 0;
+  background: #f9fafb;
+  border-top: 1px solid #eee;
+  text-align: center;
+}
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+.heading {
+  margin: 0 0 0.5rem;
+}
+.text {
+  color: #333;
+}
+.btn {
+  display: inline-block;
+  padding: 0.8rem 1rem;
+  background: #0b6efd;
+  color: #fff;
+  border-radius: 6px;
+  text-decoration: none;
+  margin-top: 0.5rem;
+}
+
+@media (max-width: 600px) {
+  .btn {
+    display: block;
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 1rem;
+  }
+}

@@ -1,0 +1,31 @@
+.hero {
+  padding: 3rem 0;
+  background: linear-gradient(180deg, #f7fafc, white);
+}
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+.title {
+  font-size: 2.25rem;
+  margin: 0 0 0.5rem;
+  line-height: 1.05;
+}
+.subtitle {
+  color: #666;
+  margin: 0;
+}
+
+@media (max-width: 600px) {
+  .hero {
+    padding: 2rem 0;
+    text-align: center;
+  }
+  .title {
+    font-size: 1.5rem;
+  }
+  .subtitle {
+    font-size: 0.95rem;
+  }
+}

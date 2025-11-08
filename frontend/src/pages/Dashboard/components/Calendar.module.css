@@ -1,0 +1,194 @@
+.calendarSection {
+  margin-bottom: 0.5rem;
+  max-width: 525px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.3rem;
+  gap: 1.3rem;
+}
+
+.navBtn {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 2rem;
+  color: #6b7280;
+  transition: all 0.2s;
+  padding: 0;
+  line-height: 1;
+}
+
+.navBtn:hover {
+  background: #f3f4f6;
+  color: #1f2937;
+  border-color: #d1d5db;
+}
+
+.mainTitle {
+  font-size: 1.75rem;
+  font-weight: bold;
+  color: #1f2937;
+  cursor: pointer;
+  margin: 0;
+  transition: color 0.2s;
+  white-space: nowrap;
+}
+
+.mainTitle:hover {
+  color: #3b82f6;
+}
+
+.calendarGrid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.44rem;
+}
+
+.calendarHeader {
+  text-align: center;
+  font-weight: bold;
+  color: #6b7280;
+  padding: 0.44rem;
+  font-size: 1.3rem;
+}
+
+.calendarDay {
+  aspect-ratio: 1;
+  border: 1px solid #e5e7eb;
+  border-radius: 7px;
+  padding: 0.44rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  background-color: white;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+}
+
+.calendarDay:hover {
+  border-color: #3b82f6;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.calendarDay.today {
+  background-color: #eff6ff;
+  border-color: #3b82f6;
+  font-weight: bold;
+}
+
+.calendarDayEmpty {
+  aspect-ratio: 1;
+}
+
+.dayNumber {
+  font-size: 1.3rem;
+  color: #1f2937;
+}
+
+.taskLines {
+  display: flex;
+  flex-direction: column;
+  gap: 3.5px;
+  margin-top: 0.35rem;
+  width: 100%;
+  align-items: center;
+}
+
+.taskLine {
+  width: 80%;
+  height: 5px;
+  border-radius: 2.5px;
+  display: block;
+}
+
+@media (max-width: 768px) {
+  .calendarSection {
+    max-width: 100%;
+  }
+
+  .header {
+    margin-bottom: 0.75rem;
+  }
+
+  .mainTitle {
+    font-size: 1.25rem;
+  }
+
+  .navBtn {
+    width: 40px;
+    height: 40px;
+    font-size: 1.5rem;
+  }
+
+  .calendarGrid {
+    gap: 0.3rem;
+  }
+
+  .calendarHeader {
+    font-size: 0.875rem;
+    padding: 0.3rem;
+  }
+
+  .calendarDay {
+    padding: 0.3rem;
+  }
+
+  .dayNumber {
+    font-size: 0.875rem;
+  }
+
+  .taskLine {
+    height: 3px;
+  }
+}
+
+@media (max-width: 480px) {
+  .mainTitle {
+    font-size: 1rem;
+  }
+
+  .navBtn {
+    width: 32px;
+    height: 32px;
+    font-size: 1.25rem;
+  }
+
+  .calendarGrid {
+    gap: 0.2rem;
+  }
+
+  .calendarHeader {
+    font-size: 0.75rem;
+    padding: 0.2rem;
+  }
+
+  .calendarDay {
+    padding: 0.2rem;
+    border-radius: 4px;
+  }
+
+  .dayNumber {
+    font-size: 0.75rem;
+  }
+
+  .taskLines {
+    gap: 2px;
+    margin-top: 0.2rem;
+  }
+
+  .taskLine {
+    height: 2.5px;
+  }
+}
