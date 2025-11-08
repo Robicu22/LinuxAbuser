@@ -188,9 +188,15 @@
     font-size: 15px;
   }
 
-  .deleteButton {
-    width: 36px;
-    height: 36px;
+  .checkbox {
+    width: 22px;
+    height: 22px;
+  }
+
+  .deleteButton,
+  .detailsButton {
+    width: 40px;
+    height: 40px;
     font-size: 20px;
   }
 }
@@ -202,5 +208,22 @@
 
   .taskContent {
     gap: 10px;
+  }
+
+  .checkbox {
+    width: 24px;
+    height: 24px;
+  }
+
+  .deleteButton,
+  .detailsButton {
+    width: 44px;
+    height: 44px;
+  }
+
+  .badge,
+  .workspaceBadge {
+    padding: 5px 12px;
+    font-size: 11px;
   }
 }
