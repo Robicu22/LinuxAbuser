@@ -27,8 +27,12 @@ export default function Sidebar() {
           Workspaces
         </a>
         <a href="/tasks" className={styles.navLink}>
-          <span className={styles.navIcon}>✓</span>
-          Tasks
+          <span className={styles.navIcon}>📝</span>
+          Task Overview
+        </a>
+        <a href="/tasks" className={styles.navLink}>
+          <span className={styles.navIcon}>➕</span>
+          Create Task
         </a>
       </nav>
       <div className={styles.recentWorkspaces}>

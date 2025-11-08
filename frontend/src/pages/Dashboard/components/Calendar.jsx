@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState } from "react";
+import MonthYearPicker from "./MonthYearPicker";
 import styles from "./Calendar.module.css";
 
 const sampleTasks = [
@@ -64,13 +65,40 @@ function getFirstDayOfMonth(month, year) {
 }
 
 export default function Calendar() {
-  const currentDate = new Date();
-  const currentMonth = currentDate.getMonth();
-  const currentYear = currentDate.getFullYear();
-  const today = currentDate.getDate();
+  const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
+  const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
+  const [showPicker, setShowPicker] = useState(false);
+
+  const today = new Date();
+  const todayDay = today.getDate();
+  const todayMonth = today.getMonth();
+  const todayYear = today.getFullYear();
 
   const daysInMonth = getDaysInMonth(currentMonth, currentYear);
   const firstDay = getFirstDayOfMonth(currentMonth, currentYear);
+
+  const goToPreviousMonth = () => {
+    if (currentMonth === 0) {
+      setCurrentMonth(11);
+      setCurrentYear(currentYear - 1);
+    } else {
+      setCurrentMonth(currentMonth - 1);
+    }
+  };
+
+  const goToNextMonth = () => {
+    if (currentMonth === 11) {
+      setCurrentMonth(0);
+      setCurrentYear(currentYear + 1);
+    } else {
+      setCurrentMonth(currentMonth + 1);
+    }
+  };
+
+  const handleDateSelect = (month, year) => {
+    setCurrentMonth(month);
+    setCurrentYear(year);
+  };
 
   // Create a map of tasks by deadline
   const tasksByDate = {};
@@ -97,7 +125,10 @@ export default function Calendar() {
   }
 
   for (let day = 1; day <= daysInMonth; day++) {
-    const isToday = day === today;
+    const isToday =
+      day === todayDay &&
+      currentMonth === todayMonth &&
+      currentYear === todayYear;
     const hasTasks = tasksByDate[day];
 
     calendarDays.push(
@@ -107,11 +138,11 @@ export default function Calendar() {
       >
         <span className={styles.dayNumber}>{day}</span>
         {hasTasks && (
-          <div className={styles.taskDots}>
+          <div className={styles.taskLines}>
             {hasTasks.map((task) => (
               <span
                 key={task.id}
-                className={styles.taskDot}
+                className={styles.taskLine}
                 style={{ backgroundColor: task.workspaceColor }}
                 title={task.name}
               ></span>
@@ -124,9 +155,17 @@ export default function Calendar() {
 
   return (
     <section className={styles.calendarSection}>
-      <h2 className={styles.mainTitle}>
-        {monthNames[currentMonth]} {currentYear}
-      </h2>
+      <div className={styles.header}>
+        <button className={styles.navBtn} onClick={goToPreviousMonth}>
+          ‹
+        </button>
+        <h2 className={styles.mainTitle} onClick={() => setShowPicker(true)}>
+          {monthNames[currentMonth]} {currentYear}
+        </h2>
+        <button className={styles.navBtn} onClick={goToNextMonth}>
+          ›
+        </button>
+      </div>
       <div className={styles.calendarGrid}>
         <div className={styles.calendarHeader}>Sun</div>
         <div className={styles.calendarHeader}>Mon</div>
@@ -137,6 +176,14 @@ export default function Calendar() {
         <div className={styles.calendarHeader}>Sat</div>
         {calendarDays}
       </div>
+
+      <MonthYearPicker
+        isOpen={showPicker}
+        onClose={() => setShowPicker(false)}
+        currentMonth={currentMonth}
+        currentYear={currentYear}
+        onSelect={handleDateSelect}
+      />
     </section>
   );
 }
