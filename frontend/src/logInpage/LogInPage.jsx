@@ -1,7 +1,7 @@
-import LogInForm from "../logInpage/components/LogInForm";
+import LogInForm from "./components/LogInForm";
 import { useState } from "react";
-import formStyles from "../logInpage/components/form.module.css";
-import styles from "../logInpage/loginPage.module.css";
+import formStyles from "./components/form.module.css";
+import styles from "./loginPage.module.css";
 
 export default function LogInPage() {
   const [username, setUsername] = useState("");
