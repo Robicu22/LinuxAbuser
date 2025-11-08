@@ -3,18 +3,22 @@
   width: 280px;
   background: #fff;
   border-right: 1px solid #e0e0e0;
-  padding: 2rem 0;
+  padding: 0;
   display: flex;
   flex-direction: column;
   position: fixed;
   height: 100vh;
   overflow-y: auto;
+  z-index: 1000;
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
+  top: 0;
+  left: 0;
 }
 
 /* Profile Section */
 .profile {
   text-align: center;
-  padding: 0 1.5rem 2rem;
+  padding: 1.5rem 1.5rem 1.5rem;
   border-bottom: 1px solid #e0e0e0;
 }
 
@@ -29,7 +33,7 @@
   font-size: 2rem;
   font-weight: bold;
   color: #fff;
-  margin: 0 auto 1rem;
+  margin: 0 auto 0.75rem;
 }
 
 .profileName {
