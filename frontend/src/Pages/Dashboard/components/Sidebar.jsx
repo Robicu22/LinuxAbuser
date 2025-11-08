@@ -42,6 +42,13 @@ export default function Sidebar({ isOpen, onClose }) {
             Workspaces
           </a>
           <a
+            href="/workspace-admin"
+            className={`${styles.navLink} ${isActive("/workspace-admin")}`}
+          >
+            <span className={styles.navIcon}>⚙️</span>
+            Workspace Admin
+          </a>
+          <a
             href="/tasksDisplay"
             className={`${styles.navLink} ${isActive("/tasksDisplay")}`}
           >
