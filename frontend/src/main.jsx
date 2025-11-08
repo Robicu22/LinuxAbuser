@@ -1,10 +1,12 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
-import LogInPage from "./logInpage/LogInPage";
-import SignUpPage from "./signUppage/SignUpPage";
-import TaskPageCreate from "./taskpagecreate/TaskPageCreate";
-import TaskPageDisplay from "./taskpagedisplay/TaskPageDisplay";
+import LogInPage from "./Pages/logInpage/LogInPage";
+import SignUpPage from "./Pages/signUppage/SignUpPage";
+import TaskPageCreate from "./Pages/taskpagecreate/TaskPageCreate";
+import TaskPageDisplay from "./Pages/taskpagedisplay/TaskPageDisplay";
+import Dashboard from "./Pages/Dashboard/Dashboard";
+import AboutPage from "./Pages/About/AboutPage";
 import App from "./App";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
@@ -20,6 +22,14 @@ const router = createBrowserRouter([
   {
     path: "/signup",
     element: <SignUpPage />,
+  },
+  {
+    path: "/dashboard",
+    element: <Dashboard />,
+  },
+  {
+    path: "/about",
+    element: <AboutPage />,
   },
   {
     path: "/tasksCreate",

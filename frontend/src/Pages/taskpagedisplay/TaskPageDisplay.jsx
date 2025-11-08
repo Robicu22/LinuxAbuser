@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Task from "./components/Task";
+import Sidebar from "../Dashboard/components/Sidebar";
 import styles from "./taskPageDisplay.module.css";
 
 export default function TaskPageDisplay() {
@@ -50,21 +51,24 @@ export default function TaskPageDisplay() {
   }
 
   return (
-    <div className={styles.pageContainer}>
-      <h1 className={styles.title}>Task Overview</h1>
-      <div className={styles.taskList}>
-        {tasks.length === 0 ? (
-          <p className={styles.emptyMessage}>No tasks to display.</p>
-        ) : (
-          tasks.map((task) => (
-            <Task
-              key={task.id}
-              task={task}
-              onToggle={handleToggleTask}
-              onDelete={handleDeleteTask}
-            />
-          ))
-        )}
+    <div className={styles.pageWrapper}>
+      <Sidebar />
+      <div className={styles.pageContainer}>
+        <h1 className={styles.title}>Task Overview</h1>
+        <div className={styles.taskList}>
+          {tasks.length === 0 ? (
+            <p className={styles.emptyMessage}>No tasks to display.</p>
+          ) : (
+            tasks.map((task) => (
+              <Task
+                key={task.id}
+                task={task}
+                onToggle={handleToggleTask}
+                onDelete={handleDeleteTask}
+              />
+            ))
+          )}
+        </div>
       </div>
     </div>
   );
