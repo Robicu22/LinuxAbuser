@@ -2,6 +2,8 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
 import LogInPage from "./logInpage/LogInPage";
+import TaskPageCreate from "./taskpagecreate/TaskPageCreate";
+import TaskPageDisplay from "./taskpagedisplay/TaskPageDisplay";
 import App from "./App";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
@@ -13,6 +15,14 @@ const router = createBrowserRouter([
   {
     path: "/login",
     element: <LogInPage />,
+  },
+  {
+    path: "/tasksCreate",
+    element: <TaskPageCreate />,
+  },
+  {
+    path: "/tasksDisplay",
+    element: <TaskPageDisplay />,
   },
 ]);
 
